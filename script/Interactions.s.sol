@@ -20,3 +20,29 @@ contract MintBasicNft is Script {
         vm.stopBroadcast();
     }
 }
+
+contract MintMoodNft is Script {
+    function run() external {
+        address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment("MoodNft", block.chainid);
+        mintMoodNftOnContract(mostRecentlyDeployed);
+    }
+
+    function mintMoodNftOnContract(address contractAddress) private {
+        vm.startBroadcast();
+        MoodNft(contractAddress).mintNft();
+        vm.stopBroadcast();
+    }
+}
+
+contract FlipMood is Script {
+    function run() {
+        address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment("MoodNft", block.chainid);
+        flipMoodOnContract(mostRecentlyDeployed);
+    }
+
+    function flipMoodOnContract(address contractAddress) private {
+        vm.startBroadcast();
+        MoodNft(contractAddress).flipMood(0); //say 0 is the token id. this is meant only for local interactions
+        vm.stopBroadcast();
+    }
+}
